@@ -26,6 +26,8 @@ class user(UserMixin, Model):
         except IntegrityError:
             raise ValueError("Account already exists")
 
+    
+
 def initialize():
     DATABASE.connect()
     DATABASE.create_tables([user,], safe=True)
