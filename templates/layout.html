@@ -33,6 +33,9 @@
                      {% if current_user.is_authenticated %}
                     <ul class="header-links list-reset m-0">
                         <li>
+                            <a class= "button-shadow" href=#>Home</a>
+                        </li>
+                        <li>
                             <a class ="button-shadow" href="{{ url_for('profile') }}">Profile</a>
                             <p></p>
                         </li>
@@ -40,9 +43,7 @@
                             <a class= "button-shadow" href="{{ url_for('logout') }}">Logout</a>
                             <p></p>
                         </li>
-                        <li>
-                            <a class= "button-shadow" href=#>Home</a>
-                        </li>
+                        
                     </ul>
                     {% else %}
                         <ul class="header-links list-reset m-0">

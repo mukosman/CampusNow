@@ -4,7 +4,7 @@ from flask_login import UserMixin
 from peewee import *
 from flask_mysqldb import MySQL
 
-DATABASE = MySQLDatabase('CampusNow', user='root', password='root',host='127.0.0.1', port=3306)
+DATABASE = MySQLDatabase('campus_now', user='root', password='root',host='127.0.0.1', port=3306)
 
 class user(UserMixin, Model):
     email = CharField(unique=True)
