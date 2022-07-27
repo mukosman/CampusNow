@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{%block content %}
+</style>
+<section class="hero text-light text-center">
+	<div class="container-sm">
+		<div class="hero-inner">
+			<div class="container-sm">
+				<h2 class="section-title mt-0">Welcome Back!</h2>
+				<p class="hero-cta is-revealing">Login or <a href="{{ url_for('login') }}">create a account</a></p>
+			</div>
+			<form method="POST">
+					<div>
+						{{ form.hidden_tag() }}
+						<div>
+							{{form.email}}
+						</div>
+						<p> </p>
+						<div>
+							{{form.password}}
+						</div>
+						<p> </p>
+						<button class="button button-sm button-shadow"  type="submit">Login</a>
+				    </div>
+			</form>
+		</div>
+	</div>
+</section>
+{% endblock %}
