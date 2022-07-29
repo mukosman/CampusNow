@@ -11,6 +11,7 @@ from flask_login import (
     current_user,
 )
 import models
+from choices import getData
 
 HOST = '0.0.0.0'
 DEBUG = True
@@ -47,11 +48,39 @@ def after_request(response):
 def index():
     return render_template("index.html")
 
-@app.route("/profile")
+@app.route("/profile",methods=("GET", "POST"))
 @login_required
 def profile():
-    #models.user.update
-    return render_template("profile.html")
+    highschools = getData()
+    form = forms.ProfileForm()
+    if form.validate_on_submit():
+        models.user.update_user(
+            email = current_user.email,
+            name = form.name.data,
+            address = form.address.data,
+            phone = form.phone.data,
+            gender = form.gender.data,
+            race = form.race.data,
+            highschool = form.highschool.data,
+            standings = form.standings.data,
+            gpa = form.gpa.data,
+            grad_year = form.grad_year.data,
+            sat_math = form.sat_math.data,
+            sat_reading_writing = form.sat_reading_writing.data,
+            act = form.act.data,
+            preferred_major = form.preferred_major.data,
+            alternate_major = form.alternate_major.data,
+            sports = form.sports.data,
+            religion = form.religion.data)
+        
+        return redirect(url_for("home"))
+    return render_template("profile.html",form = form, highschools = highschools)
+
+@app.route("/home")
+@login_required
+def home():
+    #will handle the search function and showcase recommendations 
+    return render_template("home.html")
 
 @app.route("/registration",methods=("GET", "POST"))
 def registration():
@@ -79,7 +108,7 @@ def login():
         if check_password_hash(user.password, form.password.data):
             login_user(user)
             flash("You are logged in", "success")
-            return redirect(url_for("profile"))
+            return redirect(url_for("home"))
         else:
             flash("Password does not match", "error")
     return render_template("login.html", form=form)

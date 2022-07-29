@@ -1,166 +1,149 @@
 {% extends "layout.html" %}
 {%block content %}
-<section class="pricing section">
-                <div class="container">
-                    <div class="pricing-inner section-inner has-top-divider">
-                        <h2 class="section-title mt-0 text-center">Pricing</h2>
-                        <div class="pricing-tables-wrap">
-                            <div class="pricing-table is-revealing">
-                                <div class="pricing-table-inner">
-                                    <div class="pricing-table-main">
-                                        <div class="pricing-table-header">
-                                            <div class="pricing-table-title mt-12 mb-16 text-secondary">Lorem ipsum</div>
-                                            <div class="pricing-table-price mb-24 pb-32"><span class="pricing-table-price-currency h3">$</span><span class="pricing-table-price-amount h1">29</span></div>
-                                        </div>
-                                        <ul class="pricing-table-features list-reset text-xs mb-56">
-                                            <li>
-                                                <span class="list-icon">
-                                                    <svg width="16" height="12" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M14.3.3L5 9.6 1.7 6.3c-.4-.4-1-.4-1.4 0-.4.4-.4 1 0 1.4l4 4c.2.2.4.3.7.3.3 0 .5-.1.7-.3l10-10c.4-.4.4-1 0-1.4-.4-.4-1-.4-1.4 0z" fill="#00C6A7" fill-rule="nonzero"/>
-                                                    </svg>
-                                                </span>
-                                                <span>Sed do eiusmod tempor cesa.</span>
-                                            </li>
-                                            <li>
-                                                <span class="list-icon">
-                                                    <svg width="16" height="12" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M14.3.3L5 9.6 1.7 6.3c-.4-.4-1-.4-1.4 0-.4.4-.4 1 0 1.4l4 4c.2.2.4.3.7.3.3 0 .5-.1.7-.3l10-10c.4-.4.4-1 0-1.4-.4-.4-1-.4-1.4 0z" fill="#00C6A7" fill-rule="nonzero"/>
-                                                    </svg>
-                                                </span>
-                                                <span>Sed do eiusmod tempor cesa.</span>
-                                            </li>
-                                            <li>
-                                                <span class="list-icon">
-                                                    <svg width="16" height="12" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M14.3.3L5 9.6 1.7 6.3c-.4-.4-1-.4-1.4 0-.4.4-.4 1 0 1.4l4 4c.2.2.4.3.7.3.3 0 .5-.1.7-.3l10-10c.4-.4.4-1 0-1.4-.4-.4-1-.4-1.4 0z" fill="#00C6A7" fill-rule="nonzero"/>
-                                                    </svg>
-                                                </span>
-                                                <span>Sed do eiusmod tempor cesa.</span>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="pricing-table-cta">
-                                        <a class="button button-secondary button-block" href="#">Get started now</a>
-                                    </div>
-                                </div>
+<section class="hero text-center">
+	<div class="container-sm">
+		<div class="hero-inner">
+			<div class="container-sm">
+				<h2 class="section-title mt-0">Create your profile</h2>
+				<p class="hero-cta is-revealing">It's simpler to connect you with schools the more information you provide.</p>
+			</div>
+			<form method="POST">
+					<div>
+						{{ form.hidden_tag() }}
+                        <ul class="m-0" style="list-style: none;">
+                            <h4> Personal Information</h4>
+                            <label>Full name </label>
+                            <li>
+                                {{form.name}}
+                            </li>
+                            <label>Zipcode</label>
+                            <li>
+                                {{form.address}}
+                            </li>
+                            <label>Phone </label>
+                            <li>
+                                {{form.phone}}
+                            </li>
+                            <label style ="color:#5B6F82">Race</label>
+                            <li>
+                                {{form.race}}
+                            </li> 
+                            <label style ="color:#5B6F82">Gender</label>
+                            <li>
+                                {{form.gender}}
+                            </li>  
+                        </ul>
+						<hr>
+                       
+                        <ul class="m-0" style="list-style: none;">
+                             <h4> Academics</h4>
+                             <label style ="color:#5B6F82">High School</label>
+                            <li>
+                                {{form.highschool}}
+                            </li>
+                            <div style="height:200px; overflow:hidden; overflow-y:scroll;">
+                                <ul id="school_list_og" class="m-0" style="list-style: none; display: none;">
+                                    {% for school in highschools %}
+                                        <hr>
+                                        <li>{{ school['Name'] }}, {{ school['City'] }}, {{ school['State'] }}</li>
+                                    {% endfor %}
+                                </ul>
+                                <ul id="school_list" class="m-0" style="list-style: none;">
+                                    {% for school in highschools %}
+                                        <hr>
+                                        <li id="{{ school['Name'] }}, {{ school['City'] }}, {{ school['State'] }}">{{ school['Name'] }}, {{ school['City'] }}, {{ school['State'] }}</li>
+                                    {% endfor %}
+                                </ul>
                             </div>
-                            <div class="pricing-table is-revealing">
-                                <div class="pricing-table-inner">
-                                    <div class="pricing-table-main">
-                                        <div class="pricing-table-header">
-                                            <div class="pricing-table-title mt-12 mb-16 text-primary">Lorem ipsum</div>
-                                            <div class="pricing-table-price mb-24 pb-32"><span class="pricing-table-price-currency h3">$</span><span class="pricing-table-price-amount h1">129</span></div>
-                                        </div>
-                                        <ul class="pricing-table-features list-reset text-xs mb-56">
-                                            <li>
-                                                <span class="list-icon">
-                                                    <svg width="16" height="12" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M14.3.3L5 9.6 1.7 6.3c-.4-.4-1-.4-1.4 0-.4.4-.4 1 0 1.4l4 4c.2.2.4.3.7.3.3 0 .5-.1.7-.3l10-10c.4-.4.4-1 0-1.4-.4-.4-1-.4-1.4 0z" fill="#00A2B8" fill-rule="nonzero"/>
-                                                    </svg>
-                                                </span>
-                                                <span>Sed do eiusmod tempor cesa.</span>
-                                            </li>
-                                            <li>
-                                                <span class="list-icon">
-                                                    <svg width="16" height="12" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M14.3.3L5 9.6 1.7 6.3c-.4-.4-1-.4-1.4 0-.4.4-.4 1 0 1.4l4 4c.2.2.4.3.7.3.3 0 .5-.1.7-.3l10-10c.4-.4.4-1 0-1.4-.4-.4-1-.4-1.4 0z" fill="#00A2B8" fill-rule="nonzero"/>
-                                                    </svg>
-                                                </span>
-                                                <span>Sed do eiusmod tempor cesa.</span>
-                                            </li>
-                                            <li>
-                                                <span class="list-icon">
-                                                    <svg width="16" height="12" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M14.3.3L5 9.6 1.7 6.3c-.4-.4-1-.4-1.4 0-.4.4-.4 1 0 1.4l4 4c.2.2.4.3.7.3.3 0 .5-.1.7-.3l10-10c.4-.4.4-1 0-1.4-.4-.4-1-.4-1.4 0z" fill="#00A2B8" fill-rule="nonzero"/>
-                                                    </svg>
-                                                </span>
-                                                <span>Sed do eiusmod tempor cesa.</span>
-                                            </li>
-                                            <li>
-                                                <span class="list-icon">
-                                                    <svg width="16" height="12" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M14.3.3L5 9.6 1.7 6.3c-.4-.4-1-.4-1.4 0-.4.4-.4 1 0 1.4l4 4c.2.2.4.3.7.3.3 0 .5-.1.7-.3l10-10c.4-.4.4-1 0-1.4-.4-.4-1-.4-1.4 0z" fill="#00A2B8" fill-rule="nonzero"/>
-                                                    </svg>
-                                                </span>
-                                                <span>Sed do eiusmod tempor cesa.</span>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="pricing-table-cta">
-                                        <a class="button button-primary button-block" href="#">Get started now</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            
-            <section class="features section text-center">
-                <div class="container">
-                    <div class="features-inner section-inner has-top-divider">
-                        <h2 class="section-title mt-0">Product features</h2>
-                        <div class="features-wrap">
-                            <div class="feature is-revealing">
-                                <div class="feature-inner">
-                                    <div class="feature-icon">
-                                        <svg width="48" height="48" xmlns="http://www.w3.org/2000/svg">
-                                            <g fill="none" fill-rule="evenodd">
-                                                <path fill="#84E482" d="M48 16v32H16z"/>
-                                                <path fill="#0EB3CE" d="M0 0h32v32H0z"/>
-                                            </g>
-                                        </svg>
-                                    </div>
-                                    <h4 class="feature-title h3-mobile">Lorem Ipsum</h4>
-                                    <p class="text-sm">often arouses curiosity due to its resemblance to classical latin</p>
-                                </div>
-                            </div>
-                            <div class="feature is-revealing">
-                                <div class="feature-inner">
-                                    <div class="feature-icon">
-                                        <svg width="48" height="48" xmlns="http://www.w3.org/2000/svg">
-                                            <g fill="none" fill-rule="evenodd">
-                                                <path fill="#84E482" d="M48 16v32H16z"/>
-                                                <path fill="#0EB3CE" d="M0 0v32h32z"/>
-                                                <circle fill="#02C6A4" cx="29" cy="9" r="4"/>
-                                            </g>
-                                        </svg>
-                                    </div>
-                                    <h4 class="feature-title h3-mobile">Lorem Ipsum</h4>
-                                    <p class="text-sm">often arouses curiosity due to its resemblance to classical latin</p>
-                                </div>
-                            </div>
-                            <div class="feature is-revealing">
-                                <div class="feature-inner">
-                                    <div class="feature-icon">
-                                        <svg width="48" height="48" xmlns="http://www.w3.org/2000/svg">
-                                            <g fill="none" fill-rule="evenodd">
-                                                <path fill="#0EB3CE" d="M0 0h32v32H0z"/>
-                                                <path fill="#84E482" d="M16 16h32L16 48z"/>
-                                            </g>
-                                        </svg>
-                                    </div>
-                                    <h4 class="feature-title h3-mobile">Lorem Ipsum</h4>
-                                    <p class="text-sm">often arouses curiosity due to its resemblance to classical latin</p>
-                                </div>
-                            </div>
-                            <div class="feature is-revealing">
-                                <div class="feature-inner">
-                                    <div class="feature-icon">
-                                        <svg width="48" height="48" xmlns="http://www.w3.org/2000/svg">
-                                            <g fill="none" fill-rule="evenodd">
-                                                <path d="M32 40H0c0-8.837 7.163-16 16-16s16 7.163 16 16z" fill="#84E482" style="mix-blend-mode:multiply"/>
-                                                <path fill="#03C5A4" d="M12 8h8v8h-8z"/>
-                                                <path fill="#0EB3CE" d="M32 0h16v48H32z"/>
-                                            </g>
-                                        </svg>
-                                    </div>
-                                    <h4 class="feature-title h3-mobile">Lorem Ipsum</h4>
-                                    <p class="text-sm">often arouses curiosity due to its resemblance to classical latin</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
+                            <label style ="color:#5B6F82">GPA</label>
+                            <li>
+                                {{form.gpa}}
+                            </li>
+                            <label style ="color:#5B6F82">Standing</label>
+                             <li>
+                                {{form.standings}}
+                            </li>
+                            <label style ="color:#5B6F82">Grad Year</label>
+                            <li>
+                                {{form.grad_year}}
+                            </li>
+                            <label style ="color:#5B6F82">SAT Reading and Writing</label>
+                            <li>
+                                {{form.sat_reading_writing}}
+                            </li>
+                            <label style ="color:#5B6F82">SAT Math</label> 
+                            <li>
+                                {{form.sat_math}}
+                            </li>
+                            <label style ="color:#5B6F82">ACT Compositon</label>
+                            <li>
+                                {{form.act}}
+                            </li>  
+                        </ul>
+                        <hr>
+                        
+                        <ul class="m-0" style="list-style: none;">
+                            <h4> Interests</h4>
+                            <label style ="color:#5B6F82">Preferred Major</label>
+                            <li>
+                                {{form.preferred_major}}
+                            </li>
+                            <label style ="color:#5B6F82">Alternate Major</label>
+                            <li>
+                                {{form.alternate_major}}
+                            </li>
+                            <label style ="color:#5B6F82">Sports</label>
+                            <li>
+                                {{form.sports}}
+                            </li>
+                            <label style ="color:#5B6F82">Religion</label>
+                            <li>
+                                {{form.religion}}
+                            </li> 
+                        </ul>
+						<p> </p>
+						<button class="button button-sm button-shadow" type="submit">Save Changes</a>
+				    </div>
+			</form>
+		</div>
+	</div>
+</section>
+<script>
+    window.onload = () => {
+        let schools = document.getElementById("school_list_og").querySelectorAll('li');
+        for (let i = 0; i < schools.length; i++) {
+            if (document.getElementById(schools[i].innerHTML)) {
+                document.getElementById(schools[i].innerHTML).addEventListener('click', () => {
+                    document.getElementById('highschool_input').value = schools[i].innerHTML;
+                    filterSchools();
+                });
+            }
+        }
+    };
+    
+    document.getElementById('highschool_input').addEventListener('keyup', filterSchools);
+
+    function filterSchools() {
+        let schools = document.getElementById("school_list_og").querySelectorAll('li');
+        let filteredSchools = [];
+        let input = document.getElementById('highschool_input').value;
+        for (let i = 0; i < schools.length; i++) {
+            if (schools[i].innerHTML.toLowerCase().startsWith(input.toLowerCase())) {
+                filteredSchools.push(schools[i].innerHTML);
+            }
+        }
+        document.getElementById("school_list").innerHTML = '';
+        for (let i = 0; i < filteredSchools.length; i++) {
+            let newListItem = document.createElement('li');
+            newListItem.setAttribute('id', filteredSchools[i]);
+            newListItem.innerHTML = filteredSchools[i];
+            newListItem.addEventListener('click', () => {
+                document.getElementById('highschool_input').value = filteredSchools[i];
+                filterSchools();
+            });
+            document.getElementById("school_list").appendChild(document.createElement('hr'));
+            document.getElementById("school_list").appendChild(newListItem);
+        }
+    }
+</script>
 {% endblock %}
