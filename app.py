@@ -92,6 +92,41 @@ def logout():
     flash("You've been logged out! Come back soon!", "success")
     return redirect(url_for("index"))
 
+
+
+
+@app.route("/search")
+@login_required
+def search():
+    
+    #apikey = os.environ.get('apikey')
+    apiurl = "https://api.data.gov/ed/collegescorecard/v1/"
+    
+    potential={}
+    potential["location"]=request.form.get("current location")
+    potential["search_radius"]=request.form.get("search radius")
+    potential["minority_serving"]=request.form.get("minority serving")
+    potential["religious"]=request.form.get("religious")
+    potential["retention_rate"]=request.form.get("retention rate")
+    potential["tuition_instate"]=request.form.get("tuiton instate")
+    potential["tuition_oos"]=request.form.get("tuiton outofstate")
+    potential["apikey"]=os.environ.get('apikey')
+   
+    params=[]
+
+    for x in potential:
+        if potential[x]!="":
+            params[x]=potential[x]
+    response = requests.get(f"{apiurl}", params=parameters)
+    if response.status_code == 200:
+        print("sucessfully fetched the data with parameters provided")
+        self.formatted_print(response.json())
+    else:
+        print(  
+            f"Hello person, there's a {response.status_code} error with your request")
+            
+
+
 if __name__== '__main__':
     models.initialize()
     try:
