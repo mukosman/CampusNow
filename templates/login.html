@@ -6,15 +6,16 @@
 		<div class="hero-inner">
 			<div class="container-sm">
 				<h2 class="section-title mt-0">Welcome Back!</h2>
-				<p class="hero-cta is-revealing">Login or <a href="{{ url_for('login') }}">create a account</a></p>
+				<p class="hero-cta is-revealing">Login or <a href="{{ url_for('registration') }}">create a account</a></p>
 			</div>
 			<form method="POST">
 					<div>
 						{{ form.hidden_tag() }}
+						<label>Email</label>
 						<div>
 							{{form.email}}
 						</div>
-						<p> </p>
+						<label>Password</label>
 						<div>
 							{{form.password}}
 						</div>
