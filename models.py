@@ -4,6 +4,7 @@ from flask_bcrypt import generate_password_hash
 from flask_login import UserMixin
 from peewee import *
 from flask_mysqldb import MySQL
+from wtforms import StringField
 
 DATABASE = MySQLDatabase('campus_now', user='root', password='root',host='127.0.0.1', port=3306)
 
@@ -15,7 +16,7 @@ class user(UserMixin, Model):
 
     #profile - personal
     name = CharField(max_length=100)
-    address = TextField()
+    address = StringField()
     phone = CharField(max_length = 10)
     gender = CharField(
         max_length=2,

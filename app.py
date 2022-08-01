@@ -10,8 +10,12 @@ from flask_login import (
     login_required,
     current_user,
 )
+from flask import request 
 import models
 from choices import getData
+import favicon
+from pandas import read_excel 
+import os
 
 HOST = '0.0.0.0'
 DEBUG = True
@@ -124,36 +128,44 @@ def logout():
 
 
 
-@app.route("/search")
-@login_required
-def search():
-    
-    #apikey = os.environ.get('apikey')
-    apiurl = "https://api.data.gov/ed/collegescorecard/v1/"
-    
-    potential={}
-    potential["location"]=request.form.get("current location")
-    potential["search_radius"]=request.form.get("search radius")
-    potential["minority_serving"]=request.form.get("minority serving")
-    potential["religious"]=request.form.get("religious")
-    potential["retention_rate"]=request.form.get("retention rate")
-    potential["tuition_instate"]=request.form.get("tuiton instate")
-    potential["tuition_oos"]=request.form.get("tuiton outofstate")
-    potential["apikey"]=os.environ.get('apikey')
-   
-    params=[]
+@app.route("/searching",methods=["POST"])
+def searching():
+    apiurl = "https://api.data.gov/ed/collegescorecard/v1/schools.json"
+    params={}
+    params["api_key"]=os.environ.get('api_key')
+    svars=getsearchvars()
+    for x in svars:
+        something=eval(x[3])
+        if something:
+            params[str(x[1])]=something
+    print(params)
+    response = requests.get(f"{apiurl}", params=params)
+    response=response.json()
+    print(response)
+    return response
 
-    for x in potential:
-        if potential[x]!="":
-            params[x]=potential[x]
-    response = requests.get(f"{apiurl}", params=parameters)
-    if response.status_code == 200:
-        print("sucessfully fetched the data with parameters provided")
-        self.formatted_print(response.json())
-    else:
-        print(  
-            f"Hello person, there's a {response.status_code} error with your request")
-            
+def getsearchvars():    
+    df=read_excel("CollegeScorecardDataDictionary.xlsx",sheet_name="Institution_Data_Dictionary",usecols="L")
+    searchvars=[]
+    for x in range(3251):
+        searchvar=df.iloc[x][0]
+        if str(searchvar)!="nan":
+            searchvar=df.iloc[x][0]
+            searchvar=searchvar.split(",")
+            searchvar=tuple(searchvar)
+            searchvars.append(searchvar)
+    return searchvars
+
+@app.route("/dummysearch",methods=["GET"])
+def dummy():
+    searchvars=getsearchvars()
+    elems="<form method=\"post\" action=\"/searching\">"
+    for x in searchvars:
+        elems+='''<label for=\"{0}\">{1}</label>
+        <br> <input type=\"text\" name=\"{0}\"> <br>'''.format(x[2],x[0])
+    elems+="<input type=\"submit\" value=\"Search\" /> </form>"
+    return elems
+    
 
 
 if __name__== '__main__':
