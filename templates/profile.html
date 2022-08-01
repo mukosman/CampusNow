@@ -3,12 +3,12 @@
 <section class="hero text-center">
 	<div class="container-sm">
 		<div class="hero-inner">
-			<div class="container-sm">
+			<div class="container-sm text-light" >
 				<h2 class="section-title mt-0">Create your profile</h2>
 				<p class="hero-cta is-revealing">It's simpler to connect you with schools the more information you provide.</p>
 			</div>
 			<form method="POST">
-					<div>
+					<div class = "text-light">
 						{{ form.hidden_tag() }}
                         <ul class="m-0" style="list-style: none;">
                             <h4> Personal Information</h4>
@@ -34,14 +34,15 @@
                             </li>  
                         </ul>
 						<hr>
-                       
+                    </div>
+                    <div>
                         <ul class="m-0" style="list-style: none;">
                              <h4> Academics</h4>
                              <label style ="color:#5B6F82">High School</label>
                             <li>
                                 {{form.highschool}}
                             </li>
-                            <div style="height:200px; overflow:hidden; overflow-y:scroll;">
+                            <div style="height:200px; overflow:hidden; overflow-y:scroll;" class ="text-primary">
                                 <ul id="school_list_og" class="m-0" style="list-style: none; display: none;">
                                     {% for school in highschools %}
                                         <hr>

@@ -1,6 +1,6 @@
 from choices import RACES_IN_CHOICES,GENDER_CHOICES,YEAR_IN_SCHOOL_CHOICES
 from flask_wtf import Form
-from wtforms import StringField, PasswordField, BooleanField, TextField, TextAreaField, IntegerField,SelectField,DecimalField
+from wtforms import StringField, PasswordField, BooleanField, TextAreaField, IntegerField,SelectField,DecimalField
 from wtforms.validators import (
     DataRequired,
     ValidationError,
