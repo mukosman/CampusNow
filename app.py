@@ -10,7 +10,6 @@ from flask_login import (
     login_required,
     current_user,
 )
-from flask import request 
 import models
 from choices import getData
 import favicon
@@ -132,7 +131,7 @@ def logout():
 def searching():
     apiurl = "https://api.data.gov/ed/collegescorecard/v1/schools.json"
     params={}
-    params["api_key"]=os.environ.get('api_key')
+    params["api_key"]="1fPdMJ1JH15MKnvbqb4fPvh64aW6SSrVie9HLJYk"
     svars=getsearchvars()
     for x in svars:
         something=eval(x[3])
