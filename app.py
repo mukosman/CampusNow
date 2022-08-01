@@ -158,16 +158,14 @@ def getsearchvars():
 
 @app.route("/dummysearch",methods=["GET"])
 def dummy():
-    searchvars=getsearchvars()
-    elems="<form method=\"post\" action=\"/searching\">"
-    for x in searchvars:
-        elems+='''<label for=\"{0}\">{1}</label>
-        <br> <input type=\"text\" name=\"{0}\"> <br>'''.format(x[2],x[0])
-    elems+="<input type=\"submit\" value=\"Search\" /> </form>"
-    return elems
-    
+    return render_template("dummysearch.html")
 
-
+def getfavicon(url):
+    icons = favicon.get(url)
+    icon = icons[0]
+    response = requests.get(icon.url, stream=True)
+    with open('D:/School/CampusNow/tmp/python-favicon.{}'.format(icon.format), 'wb') as image:
+        return response
 if __name__== '__main__':
     models.initialize()
     try:
