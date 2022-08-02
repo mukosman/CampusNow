@@ -16,6 +16,8 @@ from choices import getData
 import favicon
 from pandas import read_excel 
 import os
+import matplotlib.pyplot as plt
+import numpy as np
 
 HOST = '0.0.0.0'
 DEBUG = True
@@ -125,6 +127,49 @@ def logout():
     flash("You've been logged out! Come back soon!", "success")
     return redirect(url_for("index"))
 
+@app.route("/makegraph", methods=["GET"])
+def makegraphoptions():
+    df = read_excel("CollegeScorecardDataDictionary.xlsx",
+                    sheet_name="Institution_Data_Dictionary", usecols="N")
+    options = '''<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for options"> <ul id="myUL">'''
+    for x in range(3250):
+        x = df.iloc[x][0]
+        try:
+            x = x.split(",")
+            category = x[1].split(".")
+            name = category[1]
+            category = category[0]
+            if x[4] != "0":
+                print(x[4])
+                varname = (x[1])
+                options += "<li><a href=\"bargraph?category={0}&name={1}&colleges=selected\">{2}</a></li>".format(
+                    category, name, x[0])
+        except: 
+            pass
+    print(options)
+    options += '''</ul> <script>
+function myFunction() {
+  // Declare variables
+  var input, filter, ul, li, a, i, txtValue;
+  input = document.getElementById('myInput');
+  filter = input.value.toUpperCase();
+  ul = document.getElementById("myUL");
+  li = ul.getElementsByTagName('li');
+
+  // Loop through all list items, and hide those who don't match the search query
+  for (i = 0; i < li.length; i++) {
+    a = li[i].getElementsByTagName("a")[0];
+    txtValue = a.textContent || a.innerText;
+    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+      li[i].style.display = "";
+    } else {
+      li[i].style.display = "none";
+    }
+  }
+}
+</script>'''
+    return options
+    
 
 
 
@@ -156,6 +201,23 @@ def getsearchvars():
             searchvars.append(searchvar)
     return searchvars
 
+
+def bargraph(colleges,category,attribute):
+    x=[]
+    height=[]
+    for college in colleges:
+        college=college["latest"]
+        try:
+            ht=int(college[category][attribute])
+            height.append(ht)
+            x.append(college["school"]["name"])
+        except:
+            pass
+    plt.bar(x=x,height=height)
+    plt.xticks(rotation=90)
+    plt.tight_layout()
+    plt.show()
+
 @app.route("/dummysearch",methods=["GET"])
 def dummy():
     return render_template("dummysearch.html")
@@ -166,6 +228,7 @@ def getfavicon(url):
     response = requests.get(icon.url, stream=True)
     with open('D:/School/CampusNow/tmp/python-favicon.{}'.format(icon.format), 'wb') as image:
         return response
+
 if __name__== '__main__':
     models.initialize()
     try:
