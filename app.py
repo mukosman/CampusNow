@@ -106,7 +106,7 @@ def registration():
 def login():
     form = forms.LoginForm()
     if form.validate_on_submit():
-        try:
+        try:    
             user = models.user.get(models.user.email == form.email.data)
         except models.DoesNotExist:
             flash("Email is incompatible", "error")
@@ -200,6 +200,25 @@ def getsearchvars():
             searchvar=tuple(searchvar)
             searchvars.append(searchvar)
     return searchvars
+
+def getinfo(colleges):
+    '''
+    Gets a list of 6 digit ope ids for colleges, returns list of json objects of college data
+    using collegescorecard. 
+    '''
+    apiurl = "https://api.data.gov/ed/collegescorecard/v1/schools.json"
+    params={}
+    params["api_key"]=os.environ.get('api_key')
+    collegeinfo=[]
+    for college in colleges:
+        params["ope6_id"]=college
+        response = requests.get(f"{apiurl}", params=params)
+        response=response.json()
+        collegeinfo.append(response)
+    return collegeinfo
+
+
+
 
 
 def bargraph(colleges,category,attribute):
