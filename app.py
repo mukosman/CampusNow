@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request,g,url_for,flash,redirect
+from flask import Flask, render_template, request,g,url_for,flash,redirect,session
 import requests, stripe
 import forms
 from flask_bcrypt import Bcrypt, check_password_hash
@@ -13,8 +13,9 @@ from flask_login import (
 import models
 from choices import getData
 import favicon
-from pandas import read_excel 
-import os
+import json
+
+college_api_key = 'CeaWjQovErNUFi49b28QnYGk'
 
 HOST = '0.0.0.0'
 DEBUG = True
@@ -125,8 +126,6 @@ def logout():
     return redirect(url_for("index"))
 
 
-
-
 @app.route("/searching",methods=["POST"])
 def searching():
     apiurl = "https://api.data.gov/ed/collegescorecard/v1/schools.json"
@@ -165,6 +164,8 @@ def getfavicon(url):
     response = requests.get(icon.url, stream=True)
     with open('D:/School/CampusNow/tmp/python-favicon.{}'.format(icon.format), 'wb') as image:
         return response
+
+
 if __name__== '__main__':
     models.initialize()
     try:

@@ -45,6 +45,9 @@ class user(UserMixin, Model):
     sports = CharField()
     religion = CharField()
 
+    def get_search(self):
+        return searchResults.select().where(searchResults.user == self)
+
 
     class Meta:
         database = DATABASE
@@ -87,7 +90,6 @@ class user(UserMixin, Model):
                 print(r)
         except IntegrityError:
             raise ValueError("Error submitting")
-
     
 
 def initialize():

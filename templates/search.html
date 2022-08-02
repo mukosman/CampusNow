@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+{%block content %}
+<script src="https://api.collegeai.com/v1/api/bundle.js"></script>
+<section class="features-extended section">
+    <div class="container">
+        <div class="features-extended-inner section-inner">
+            <div class="features-extended-header text-center">
+                <div class="container-sm">
+                    <h2 class="section-title mt-0">Advanced Search Tool</h2>
+                    <p class="section-paragraph"> Campus Now Advanced Search is a more detailed method of finding information on a school.</p>
+                    <p class="section-paragraph"> Information from profile will also be used. We only support schools based in the U.S. </p>
+                </div>
+            </div>
+            <form method="POST">
+					<div>
+						{{ form.hidden_tag() }}
+                        <ul class="m-0" style="list-style: none;">
+                            <h4>Search Details</h4>
+                            <label>State</label>
+                            <li>
+                                {{form.state}}
+                            </li>
+
+                            <label>School Type</label>
+                            <li>
+                                {{form.school_type}}
+                            </li>
+                            <label>Campus Size</label>
+                            <li>
+                                {{form.campus_size}}
+                            </li>
+                            <label>Acceptance Rate</label>
+                            <li>
+                                {{form.acceptance_rate}}
+                            </li>
+                            <label>Highest Degree Offered</label>
+                            <li>
+                                {{form.highest_degree }}
+                            </li>
+                            <label>Close to Scores?</label>
+                            <li>
+                                {{form.close_to_score}}
+                            </li>
+                        </ul>
+						<hr>
+                    </div>
+                    <button class="button button-sm button-shadow" type="submit">Search</a>
+			</form>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,4 +1,4 @@
-from choices import RACES_IN_CHOICES,GENDER_CHOICES,YEAR_IN_SCHOOL_CHOICES
+from choices import RACES_IN_CHOICES,GENDER_CHOICES,YEAR_IN_SCHOOL_CHOICES,STATE_IN_CHOICES,RELIGONS,SIZE_TYPE_CHOICES,SCHOOL_TYPE_CHOICES,ACCEPTANCE_IN_CHOICES,DEGREES
 from flask_wtf import Form
 from wtforms import StringField, PasswordField, BooleanField, TextAreaField, IntegerField,SelectField,DecimalField
 from wtforms.validators import (
@@ -49,4 +49,21 @@ class ProfileForm(Form):
     preferred_major = StringField("Preferred Major", validators=[DataRequired()])
     alternate_major = StringField("Alternate Major", validators=[DataRequired()])
     sports = StringField("Sport", validators=[DataRequired()])
-    religion = StringField("Religion", validators=[DataRequired()])
+    religion = SelectField("Religion", validators=[DataRequired()],choices = RELIGONS)
+
+class SearchForm(Form):
+    state = SelectField("State",choices = STATE_IN_CHOICES,validators=[DataRequired()])
+    school_type = SelectField("School Type",validators=[DataRequired()],choices = SCHOOL_TYPE_CHOICES)
+    highest_degree = SelectField("Highest Degree", validators=[DataRequired()],choices = DEGREES)
+    #specialty = SelectField("Specialty School", validators = [DataRequired()])
+    #affiliated_religion = ooleanField("Affiliated Religion",validators=[DataRequired()])
+    campus_size = SelectField("Campus Size",validators=[DataRequired()],choices = SIZE_TYPE_CHOICES)
+    #campus_housing = BooleanField("On-Campus Housing?",validators=[DataRequired()])
+    #diversity = SelectField("Diversity Preference", validators = [DataRequired()])
+    acceptance_rate = SelectField('Acceptance Rate',validators=[DataRequired()],choices= ACCEPTANCE_IN_CHOICES)
+    #annual_cost = SelectField('Annual Cost', validators = [DataRequired()])
+    close_to_score = BooleanField('Close to my score')
+
+    
+
+
