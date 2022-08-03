@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+{%block content %}
+ <section class="features-extended section">
+                <div class="container">
+                    <div class="features-extended-inner section-inner has-top-divider">
+                        <div class="features-extended-header text-center text-light">
+                            <div class="container-sm">
+                                <h2 class="section-title mt-0">Advanced Search Results</h2>
+                                <p class="section-paragraph">Advanced search is a core feature of Campus Now that allows students to specify additional requirements for a search. When used for searching for schools, an advanced search gives additional information to the engine, which helps refine the search.</p>
+                                <p class="text-sm"><i>Disclaimer: due to API limitations, some informatation may be outdated.</i></p>
+                            </div>
+                        </div>
+                        {%for school in data%}
+                        <div class="feature-extended">
+                            <div class= is-revealing">
+                                <img src="{{school['Logo Image']}}" width="300" height="250" viewBox="0 0 480 360">
+                            </div>
+                            <div class="feature-extended-body feature-inner">
+                                <h3 class="mt-0 feature-title h3-mobile">{{ school['Name'] }}</h3>
+                                <p class="text-sm"> {{ school["City"] }}, {{school["State"]}}</p>
+                                <p class="text-sm">Acceptance rate: {{ school["Acceptance"] }}%</p>
+                                <p class="text-sm">Annual average cost of attendence: ${{ school["Average Cost of Attendance"] }}</p>
+                                <p class="text-sm"><a href = #>Learn More</a><p>
+                            </div>
+                        </div>
+                        <hr>
+                        {%endfor%}
+                        </div>
+                    </div>
+                </div>
+            </section>
+{% endblock %}

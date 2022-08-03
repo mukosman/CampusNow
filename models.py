@@ -16,7 +16,7 @@ class user(UserMixin, Model):
 
     #profile - personal
     name = CharField(max_length=100)
-    address = StringField()
+    address = CharField()
     phone = CharField(max_length = 10)
     gender = CharField(
         max_length=2,

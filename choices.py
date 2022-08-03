@@ -50,35 +50,6 @@ def createAPIData(url):
     data = response.json()
     return data
 
-
-def getName(d):
-    v = d["name"]
-    if v is None:
-        return
-    return v
-
-
-def getLevels(d):
-    v = d["levels"]
-    if v is None:
-        return
-    return v
-
-
-def getCity(d):
-    v = d["city"]
-    if v is None:
-        return
-    return v
-
-
-def getState(d):
-    v = d["state"]
-    if v is None:
-        return
-    return v
-
-
 def filterHighschoolData(d):
     data = d["schools"]
     schools = []
@@ -131,11 +102,11 @@ RELIGONS = [
     (hindu, "Hindu"),
 ]
 
-notSelective = ["notSelective"]
-lessSelective = ["lessSelective"]
-selective = ["selective"]
-verySelective =["verySelective"]
-mostSelective = ["mostSelective"]
+notSelective = "notSelective"
+lessSelective = "lessSelective"
+selective = "selective"
+verySelective ="verySelective"
+mostSelective = "mostSelective"
 ACCEPTANCE_IN_CHOICES = [
     (notSelective,"Not Selective"),
     (lessSelective,"Less Selective"),
@@ -144,26 +115,26 @@ ACCEPTANCE_IN_CHOICES = [
     (mostSelective,"Most Selective"), 
 ]
 
-public = ["public"]
-private =["private"]
-forProfit = ["forprofit"]
+public = "public"
+private ="private"
+forProfit = "forprofit"
 SCHOOL_TYPE_CHOICES = [
     (public,"Public"),
     (private,"Private"),
     (forProfit,"For Profit"),
 ]
 
-large= ["large"]
-medium =["medium"]
-small = ["small"]
+large= "large"
+medium ="medium"
+small = "small"
 SIZE_TYPE_CHOICES = [
     (large,"Large"),
     (medium,"Medium"),
     (small,"Small"),
 ]
 
-four_year = ["4year"]
-two_year = ["2year"]
+four_year = "4year"
+two_year = "2year"
 DEGREES =[
     (two_year,"Two Year Degree"),
     (four_year,"Four Year Degree"),

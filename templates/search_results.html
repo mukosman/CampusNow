@@ -1,3 +1,46 @@
-{% extends "layout.html" %}
-{%block content %}
+ {% extends "layout.html" %}
+ {%block content %}
+ <script src="https://api.collegeai.com/v1/api/bundle.js"></script>
+ <section class="hero has-top-divider">
+    <div class="container-sm">
+        <div class="features-extended-inner section-inner ">
+            <div class="features-extended-header">
+            {%if query.items()|length > 0 %}
+                <div class="container-sm text-light text-center">
+                    <h2 class="section-title mt-0">Search Result</h2>
+                    <p class="section-paragraph">Best matching result to your query</p>
+                    <img src ="{{ query['campusImage'] }}" alt = "Campus Image" class="center" style="width:70%"></img>
+                </div>
+                    <div class = "text-sm">
+                        <h3 class = "section-title mt-0 text-center">{{ query['name'] }}</h3>
+                        <table>
+                        <thead>
+                        <tr>
+                            <th>Key</th>
+                            <th>Value</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            {% for key, value in query.items() %}
+                                <tr>
+                                    <td> {{ key }} </td>
+                                    <td> {{ value }} </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                        </table>
+                    </div>
+                {%else%}
+                    <p>Sorry no results try different name</p>
+                {%endif%}
+            </div>
+        </div>
+</section>
+<style>
+img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
 {% endblock %}

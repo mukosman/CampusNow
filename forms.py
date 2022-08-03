@@ -52,6 +52,9 @@ class ProfileForm(Form):
     religion = SelectField("Religion", validators=[DataRequired()],choices = RELIGONS)
 
 class SearchForm(Form):
+    search_query = StringField("Search",validators=[DataRequired()],render_kw={"placeholder": "Search.."} )
+
+class AdvancedSearchForm(Form):
     state = SelectField("State",choices = STATE_IN_CHOICES,validators=[DataRequired()])
     school_type = SelectField("School Type",validators=[DataRequired()],choices = SCHOOL_TYPE_CHOICES)
     highest_degree = SelectField("Highest Degree", validators=[DataRequired()],choices = DEGREES)

@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request,g,url_for,flash,redirect,session
 import requests, stripe
 import forms
+import helper
 from flask_bcrypt import Bcrypt, check_password_hash
 from flask_login import (
     LoginManager,
@@ -14,6 +15,14 @@ import models
 from choices import getData
 import favicon
 import json
+
+colleges = requests.get("http://universities.hipolabs.com/search?country=United+States").json()
+collegelist = []
+for i in colleges:
+    collegelist.append(i['name'].split(',')[0])
+
+info_ids_available = "acceptance_rate,act_cumulative_midpoint,act_cumulative_percentile25,act_cumulative_percentile75,admissions_website,aliases,application_website,average_aid_awarded_high_income,average_aid_awarded_lower_middle_income,average_aid_awarded_low_income,average_aid_awarded_middle_income,average_aid_awarded_upper_middle_income,average_financial_aid,avg_cost_of_attendance,avg_net_price,calendar_system,campus_image,city,class_size_range10_to19,class_size_range20_to29,class_size_range2_to9,class_size_range30_to39,class_size_range40_to49,class_size_range50_to99,class_size_range_over100,demographics_men,demographics_women,financial_aid_website,four_year_graduation_rate,fraternities_percent_participation,freshmen_live_on_campus,in_state_tuition,is_private,meal_plan_available,median_earnings_six_yrs_after_entry,median_earnings_ten_yrs_after_entry,men_varsity_sports,net_price_by_income_level0_to3000,net_price_by_income_level110001_plus,net_price_by_income_level30001_to48000,net_price_by_income_level48001_to75000,net_price_by_income_level75001_to110000,offers_study_abroad,on_campus_housing_available,out_of_state_tuition,percent_of_students_who_receive_financial_aid,percent_students_receiving_federal_grant_aid,percent_undergrads_awarded_aid,rankings_best_college_academics,rankings_best_college_athletics,rankings_best_college_campuses,rankings_best_college_food,rankings_best_college_locations,rankings_best_college_professors,rankings_best_colleges,rankings_best_colleges_for_art,rankings_best_colleges_for_biology,rankings_best_colleges_for_business,rankings_best_colleges_for_chemistry,rankings_best_colleges_for_communications,rankings_best_colleges_for_computer_science,rankings_best_colleges_for_design,rankings_best_colleges_for_economics,rankings_best_colleges_for_engineering,rankings_best_colleges_for_history,rankings_best_colleges_for_nursing,rankings_best_colleges_for_physics,rankings_best_greek_life_colleges,rankings_best_student_athletes,rankings_best_student_life,rankings_best_test_optional_colleges,rankings_best_value_colleges,rankings_colleges_that_accept_the_common_app,rankings_colleges_with_no_application_fee,rankings_hardest_to_get_in,rankings_hottest_guys,rankings_most_conservative_colleges,rankings_most_liberal_colleges,rankings_most_diverse_colleges,rankings_top_party_schools,region,sat_average,sat_composite_midpoint,sat_composite_percentile25,sat_composite_percentile75,sat_math_midpoint,sat_math_percentile25,sat_math_percentile75,sat_reading_midpoint,sat_reading_percentile25,sat_reading_percentile75,student_faculty_ratio,students_submitting_a_c_t,students_submitting_s_a_t,type_year,typical10_year_earnings,typical6_year_earnings,typical_books_and_supplies,typical_financial_aid,typical_misc_expenses,typical_room_and_board,undergrad_application_fee,undergraduate_size,women_only,women_varsity_sports".replace(',', '%2C')
+info_ids_selector = info_ids_available
 
 college_api_key = 'CeaWjQovErNUFi49b28QnYGk'
 
@@ -80,18 +89,42 @@ def profile():
         return redirect(url_for("home"))
     return render_template("profile.html",form = form, highschools = highschools)
 
-@app.route("/home")
+@app.route("/home",methods=("GET", "POST"))
 @login_required
 def home():
-    #will handle the search function and showcase recommendations 
-    return render_template("home.html")
+
+    #First card(close school that fit all the requirements)
+    user_zipcode = current_user.address
+    user_gpa = current_user.gpa
+    sat_score = str(int(current_user.sat_math)+int(current_user.sat_reading_writing))
+    distance = '60'
+    degree_type = '4year'
+    params = '{"satOverall":'+ sat_score +',"closeToMyScores":true,"distanceFromHomeMiles":[0,'+distance+'],"zipCode":'+user_zipcode+',"gpa-minimum-ten-percent":"'+user_gpa+'","degree-length":["'+ degree_type +'"]}'
+    info_ids_params = "website,shortDescription,campusImage,city,stateAbbr,aliases,acceptance_rate,enrolled_students,avg_cost_of_attendance,average_financial_aid,logo_image"
+    results = requests.get('https://api.collegeai.com/v1/api/college-list?api_key='+college_api_key + '&filters=' + requests.utils.quote(params)+'&info_ids='+info_ids_params)
+    data = results.json()
+    data = helper.filterCollegeData(data)
+    
+    #Search function
+    form = forms.SearchForm()
+    if form.validate_on_submit():
+        search_query = form.search_query.data
+        query = get_college_info(search_query)
+        session['results'] = query
+        return redirect(url_for("search_results"))
+
+    return render_template("home.html",form = form,data = data)
+
+@app.route("/search_results")
+@login_required
+def search_results():
+    query= session['results']
+    return render_template("search_results.html",query=query)
 
 @app.route("/registration",methods=("GET", "POST"))
 def registration():
     form = forms.RegisterForm()
     if form.validate_on_submit():
-
-        flash("Yay, you registered!", "success")
 
         models.user.create_user(email=form.email.data, password=form.password.data)
 
@@ -126,44 +159,71 @@ def logout():
     return redirect(url_for("index"))
 
 
-@app.route("/searching",methods=["POST"])
-def searching():
-    apiurl = "https://api.data.gov/ed/collegescorecard/v1/schools.json"
-    params={}
-    params["api_key"]="1fPdMJ1JH15MKnvbqb4fPvh64aW6SSrVie9HLJYk"
-    svars=getsearchvars()
-    for x in svars:
-        something=eval(x[3])
-        if something:
-            params[str(x[1])]=something
-    print(params)
-    response = requests.get(f"{apiurl}", params=params)
-    response=response.json()
-    print(response)
-    return response
+@app.route("/advanced_search",methods=["GET","POST"])
+@login_required
+def advanced_search():
+    form = forms.AdvancedSearchForm()
+    if form.validate_on_submit():
+        state = form.state.data
+        school_type =form.school_type.data
+        highest_degree =form.highest_degree.data
+        #affiliated_religion =form.affiliated_religion.data
+        campus_size = form.campus_size.data
+        #diversity = form.diversity.data 
+        acceptance_rate = form.acceptance_rate.data
+        #annual_cost = form.annual_cost.data
+        close_to_score = form.close_to_score.data
+        #distance_from_home = form.distance_from_home.data
 
-def getsearchvars():    
-    df=read_excel("CollegeScorecardDataDictionary.xlsx",sheet_name="Institution_Data_Dictionary",usecols="L")
-    searchvars=[]
-    for x in range(3251):
-        searchvar=df.iloc[x][0]
-        if str(searchvar)!="nan":
-            searchvar=df.iloc[x][0]
-            searchvar=searchvar.split(",")
-            searchvar=tuple(searchvar)
-            searchvars.append(searchvar)
-    return searchvars
+        types = f'"{school_type}"'
+        size = f'"{campus_size}"'
+        if close_to_score == True:
+            score = 'true'
+        else:
+            score = 'false'
+        zipcode = str(current_user.address)
+        sat_score = str(int(current_user.sat_math)+int(current_user.sat_reading_writing))
+        acceptance_type= f'"{acceptance_rate}"' 
+        degree_type = f'"{highest_degree}"'
 
-@app.route("/dummysearch",methods=["GET"])
-def dummy():
-    return render_template("dummysearch.html")
 
-def getfavicon(url):
-    icons = favicon.get(url)
-    icon = icons[0]
-    response = requests.get(icon.url, stream=True)
-    with open('D:/School/CampusNow/tmp/python-favicon.{}'.format(icon.format), 'wb') as image:
-        return response
+        info_ids_params = "website,shortDescription,campusImage,city,stateAbbr,aliases,acceptance_rate,enrolled_students,avg_cost_of_attendance,average_financial_aid,logo_image"
+        params = '{"funding-type":[' + types + '],"schoolSize":['+ size +'],"satOverall":'+ sat_score +',"closeToMyScores":'+score+',"selectivity":['+ acceptance_type +'],"in-state":"'+state+'","degree-length":['+ degree_type +']}'
+        results = requests.get('https://api.collegeai.com/v1/api/college-list?api_key='+college_api_key + '&filters=' + requests.utils.quote(params)+'&info_ids='+info_ids_params)
+        session['results'] = json.dumps(results.json())
+        return redirect(url_for("advanced_search_results"))
+
+    
+    return render_template("advanced_search.html", form=form)
+    
+@app.route("/advanced_search_results")
+@login_required
+def advanced_search_results():
+    retrieve = session['results']
+    data = json.loads(retrieve)
+    data = helper.filterCollegeData(data)
+
+    return render_template("advanced_search_results.html", data=data)
+
+
+def get_college_info(college_name):
+    url = f'https://api.collegeai.com/v1/api/autocomplete/colleges?api_key={college_api_key}'
+    json_data = requests.get(url + '&query='+college_name).json()
+    invalid = {}
+    
+    try:
+        college_id = json_data['collegeList'][0]['unitId']
+    except:
+        return invalid
+    url = f'https://api.collegeai.com/v1/api/college/info?api_key={college_api_key}&college_unit_ids='+str(college_id)+'&info_ids='+info_ids_selector
+    
+    try:
+        json_data = requests.get(url).json()['colleges'][0]
+    except:
+        return invalid
+
+    return json_data
+
 
 
 if __name__== '__main__':
