@@ -175,15 +175,24 @@ function myFunction() {
 </script>'''
     return options
 
+
+
+
+@app.route("/graphshow", methods=["GET"])
+def showgraph():
+    colleges=[]
+    colleges.append("032483")
+    colleges.append("003966")
+    colleges.append("002128")
+    colleges=getinfo(colleges)
+    data=getgraphdata(colleges,"student","size")
+    print(data)
+    savegraph(data[0],data[1])
+    return "<img src=\"/static/my_plot.png\"/>"
+
 @app.route("/dummysearch", methods=["GET"])
 def dummy():
     return render_template("dummysearch.html")
-
-
-
-
-@app.route("/datadictionary",methods=["GET"])
-def getdatadict():
     
 
 @app.route("/searching",methods=["POST"])
@@ -234,6 +243,8 @@ def getinfo(colleges):
         params["ope6_id"]=college
         response = requests.get(f"{apiurl}", params=params)
         response=response.json()
+        response=response["results"]
+        response=response[0]
         collegeinfo.append(response)
     return collegeinfo
 
@@ -255,7 +266,24 @@ def getgraphdata(colleges,category,attribute):
             pass
     return(x,height)
 
-
+def savegraph(x, height):
+    '''
+    x=[]
+    height=[]
+    for college in colleges:
+        college=college["latest"]
+        try:
+            ht=int(college[category][attribute])
+            height.append(ht)
+            x.append(college["school"]["name"])
+        except:
+            pass
+    '''
+    plt.bar(x=x,height=height)
+    plt.xticks(rotation=90)
+    plt.tight_layout()
+    plt.savefig("my_plot.png")
+    return 
 
 
 def bargraph(x,height):
