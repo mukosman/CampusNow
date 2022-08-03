@@ -18,7 +18,8 @@ from pandas import read_excel
 import os
 import matplotlib.pyplot as plt
 import numpy as np
-
+from PIL import Image
+ 
 HOST = '0.0.0.0'
 DEBUG = True
 
@@ -138,7 +139,6 @@ def makegraphoptions():
     '''
     for x in range(3250):
         x = df.iloc[x][0]
-        print(x)
         try:
             x = x.split(",")
             category = x[1].split(".")
@@ -183,12 +183,13 @@ def addfavorite(userid,collegeid):
 @app.route("/graphshow", methods=["GET"])
 def showgraph():
     colleges=[]
-    colleges.append("032483")
-    colleges.append("003966")
+    colleges.append("002115")
+    colleges.append("001315")
     colleges.append("002128")
     colleges=getinfo(colleges)
     data=getgraphdata(colleges,"student","size")
-    if (savegraph(data[0],data[1])==0):
+    color=getgraphcolors(colleges)
+    if (savegraph(data[0],data[1],color)==0):
         return "<img src=\"/static/my_plot.png\"/>"
     else:
         return "<h1>This failed fam. </h1>"
@@ -270,23 +271,34 @@ def getgraphdata(colleges,category,attribute):
             pass
     return(x,height)
 
-def savegraph(x, height):
-    '''
-    x=[]
-    height=[]
+def getgraphcolors(colleges):
+    colors=[]
     for college in colleges:
         college=college["latest"]
         try:
-            ht=int(college[category][attribute])
-            height.append(ht)
-            x.append(college["school"]["name"])
+            imgurl=college["school"]["school_url"]
+            if(imgurl[0:4]!="http"):
+                imgurl="https://"+imgurl
+            print(imgurl)
+            color=getfaviconcolor(imgurl)
+            if(color[0:3]!=[255,255,255]):
+                color1=[]
+                for x in range(len(color)):
+                    color1.append(color[x]/255.0)
+                colors.append(color1)
+            else:
+                colors.append([0.0, 0.0, 0.0])
         except:
-            pass
-    '''
-    plt.bar(x=x,height=height)
+            colors.append([0.0, 0.0, 0.0])
+    print(colors)
+    return colors
+
+
+def savegraph(x, height,color):
+    plt.bar(x=x,height=height,color=color)
     plt.xticks(rotation=90)
     plt.tight_layout()
-    plt.savefig("my_plot.png")
+    plt.savefig("static/my_plot.png")
     return 0
 
 
@@ -301,13 +313,47 @@ def bargraph(x,height):
 
 
 
-def getfavicon(url):
+
+def getfaviconcolor(url):
     icons = favicon.get(url)
     icon = icons[0]
     response = requests.get(icon.url, stream=True)
-    with open('D:/School/CampusNow/tmp/python-favicon.{}'.format(icon.format), 'wb') as image:
-        return response
+    #with open('tmp/favicon.{}'.format(icon.format), 'wb') as image:
+    with open('tmp/favicon.png', 'wb') as image:
+        for chunk in response.iter_content(1024):
+            image.write(chunk)
+    #with Image.open('tmp/favicon.{}'.format(icon.format)) as pil_img:
+    with Image.open('tmp/favicon.png') as pil_img:
+        img = pil_img.copy()
+         # Reduce colors (uses k-means internally)
+        paletted = img.convert('P', palette=Image.ADAPTIVE, colors=16)
+        # Find the color that occurs most often
+        palette = paletted.getpalette()
+        color_counts = sorted(paletted.getcolors(), reverse=True)
+        palette_index = color_counts[0][1]
+        dominant_color = palette[palette_index*3:palette_index*3+3]
+        print(dominant_color)
+        return dominant_color
 
+
+        '''
+        img = pil_img.copy()
+
+
+
+        img = img.convert("RGBA")
+        img = img.resize((1, 1), resample=0)
+        dominant_color = img.getpixel((0, 0))
+        return dominant_color
+
+    
+    pil_img=Image.open(icon,mode='r',formats=None)
+    img=pil_image.copy()
+    img=img.convert("RGBA")
+    img=img.resize((1,1),resample=0)
+    dominant_color=img.getpixel((0,0))
+    return dominant_color
+    '''
 if __name__== '__main__':
     models.initialize()
     try:
@@ -318,3 +364,4 @@ if __name__== '__main__':
     except ValueError:
         pass
     app.run(host = HOST,debug = DEBUG) 
+    
