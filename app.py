@@ -127,26 +127,31 @@ def logout():
     flash("You've been logged out! Come back soon!", "success")
     return redirect(url_for("index"))
 
-@app.route("/makegraph", methods=["GET"])
+@app.route("/graphoptions", methods=["GET"])
 def makegraphoptions():
     df = read_excel("CollegeScorecardDataDictionary.xlsx",
                     sheet_name="Institution_Data_Dictionary", usecols="N")
     options = '''<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for options"> <ul id="myUL">'''
+    #categorieslist=[school, student, cost, aid, earnings,completion,repayment,admissions,academics, programs]
+    '''
+    Add option to sort by category, add popular searches
+    '''
     for x in range(3250):
         x = df.iloc[x][0]
+        print(x)
         try:
             x = x.split(",")
             category = x[1].split(".")
             name = category[1]
             category = category[0]
             if x[4] != "0":
-                print(x[4])
                 varname = (x[1])
-                options += "<li><a href=\"bargraph?category={0}&name={1}&colleges=selected\">{2}</a></li>".format(
+                options += "<li><a href=\"bargraph?category={0}&name={1}&colleges=selected\">{0} {2}</a></li>".format(
                     category, name, x[0])
-        except: 
+        except:     
             pass
-    print(options)
+
+        
     options += '''</ul> <script>
 function myFunction() {
   // Declare variables
@@ -163,15 +168,23 @@ function myFunction() {
     if (txtValue.toUpperCase().indexOf(filter) > -1) {
       li[i].style.display = "";
     } else {
-      li[i].style.display = "none";
+      li[i].style.display = "none";     
     }
   }
 }
 </script>'''
     return options
+
+@app.route("/dummysearch", methods=["GET"])
+def dummy():
+    return render_template("dummysearch.html")
+
+
+
+
+@app.route("/datadictionary",methods=["GET"])
+def getdatadict():
     
-
-
 
 @app.route("/searching",methods=["POST"])
 def searching():
@@ -182,11 +195,18 @@ def searching():
     for x in svars:
         something=eval(x[3])
         if something:
+            try:
+                if(something[0:2]=="NOT"):
+                    x[1]=str(x[1])+"__not"
+                    params[x[1]]=something[3:]
+                elif(something[0:4]=="RANGE"):
+                    x[1]=str(x[1])+"__range"
+                    params[x[1]]=something[5:]                    
+            except:
+                pass
             params[str(x[1])]=something
-    print(params)
     response = requests.get(f"{apiurl}", params=params)
     response=response.json()
-    print(response)
     return response
 
 def getsearchvars():    
@@ -218,10 +238,11 @@ def getinfo(colleges):
     return collegeinfo
 
 
-
-
-
-def bargraph(colleges,category,attribute):
+def getgraphdata(colleges,category,attribute):
+    '''
+    Gets graph x axis labels and height data from list of college 
+    json objects and chosen category and attribute
+    '''
     x=[]
     height=[]
     for college in colleges:
@@ -232,14 +253,23 @@ def bargraph(colleges,category,attribute):
             x.append(college["school"]["name"])
         except:
             pass
+    return(x,height)
+
+
+
+
+def bargraph(x,height):
+    '''
+    Turns x axis labels and height data into bar graph
+    '''
+    x=[]
+    height=[]
     plt.bar(x=x,height=height)
     plt.xticks(rotation=90)
     plt.tight_layout()
     plt.show()
 
-@app.route("/dummysearch",methods=["GET"])
-def dummy():
-    return render_template("dummysearch.html")
+
 
 def getfavicon(url):
     icons = favicon.get(url)
