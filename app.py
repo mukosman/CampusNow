@@ -262,8 +262,6 @@ def bargraph(x,height):
     '''
     Turns x axis labels and height data into bar graph
     '''
-    x=[]
-    height=[]
     plt.bar(x=x,height=height)
     plt.xticks(rotation=90)
     plt.tight_layout()
