@@ -175,8 +175,10 @@ function myFunction() {
 </script>'''
     return options
 
-
-
+def getfavorites(userid):
+    pass
+def addfavorite(userid,collegeid):
+    pass
 
 @app.route("/graphshow", methods=["GET"])
 def showgraph():
@@ -186,9 +188,10 @@ def showgraph():
     colleges.append("002128")
     colleges=getinfo(colleges)
     data=getgraphdata(colleges,"student","size")
-    print(data)
-    savegraph(data[0],data[1])
-    return "<img src=\"/static/my_plot.png\"/>"
+    if (savegraph(data[0],data[1])==0):
+        return "<img src=\"/static/my_plot.png\"/>"
+    else:
+        return "<h1>This failed fam. </h1>"
 
 @app.route("/dummysearch", methods=["GET"])
 def dummy():
@@ -229,6 +232,7 @@ def getsearchvars():
             searchvar=tuple(searchvar)
             searchvars.append(searchvar)
     return searchvars
+
 
 def getinfo(colleges):
     '''
@@ -283,7 +287,7 @@ def savegraph(x, height):
     plt.xticks(rotation=90)
     plt.tight_layout()
     plt.savefig("my_plot.png")
-    return 
+    return 0
 
 
 def bargraph(x,height):
