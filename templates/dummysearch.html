@@ -6,11 +6,15 @@
 </head>
 
 <body>
-    <h1 href="/datadictionary">Unexpected results? Check the <a href="https://collegescorecard.ed.gov/assets/CollegeScorecardDataDictionary.xlsx"> data dictionary<a></a> for proper inputs. </h1>
-    <h1> For searching a range of values, use RANGE followed by the upper and lower bounds of the range, separated by two periods. i.e RANGE 3..4. </h1>
-    <h1>To exclude a set of records from results, use a negative match (also known as an inverted match). Type the word NOT before paramaters specify a negative match. i.e. NOT 1</h1>
+    <h1 href="/datadictionary">Unexpected results? Check the <a
+            href="https://collegescorecard.ed.gov/assets/CollegeScorecardDataDictionary.xlsx"> data dictionary<a></a>
+            for proper inputs. </h1>
+    <h1> For searching a range of values, use RANGE followed by the upper and lower bounds of the range, separated by
+        two periods. i.e RANGE 3..4. </h1>
+    <h1>To exclude a set of records from results, use a negative match (also known as an inverted match). Type the word
+        NOT before paramaters specify a negative match. i.e. NOT 1</h1>
     <form method="post" action="/searching">
-            <label for="opeid">8-digit OPE ID for institution
+        <label for="opeid">8-digit OPE ID for institution
             (Range Search Okay)</label><br> <input type="text" name="opeid"> <br><label for="opeid6">6-digit OPE ID for
             institution (Range Search Okay)</label><br> <input type="text" name="opeid6"> <br><label
             for="instnm">Institution name (Range Search Okay)</label><br> <input type="text" name="instnm"> <br><label
@@ -5949,7 +5953,8 @@
             for="md_earn_wne_male0_p10">Median earnings of non-male students working and not enrolled 10 years after
             entry</label><br> <input type="text" name="md_earn_wne_male0_p10"> <br><label
             for="md_earn_wne_male1_p10">Median earnings of male students working and not enrolled 10 years after
-            entry</label><br> <input type="text" name="md_earn_wne_male1_p10"> <br></form>
+            entry</label><br> <input type="text" name="md_earn_wne_male1_p10"> <br><input type="submit" value="Search">
+    </form>
 </body>
 
 </html>
