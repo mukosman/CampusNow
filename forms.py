@@ -1,5 +1,5 @@
 from choices import RACES_IN_CHOICES,GENDER_CHOICES,YEAR_IN_SCHOOL_CHOICES,STATE_IN_CHOICES,RELIGONS,SIZE_TYPE_CHOICES,SCHOOL_TYPE_CHOICES,ACCEPTANCE_IN_CHOICES,DEGREES
-from flask_wtf import Form
+from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, TextAreaField, IntegerField,SelectField,DecimalField
 from wtforms.validators import (
     DataRequired,
@@ -15,7 +15,7 @@ def email_exists(form, field):
     if user.select().where(user.email == field.data).exists():
         raise ValidationError("Account with that email already exists")
 
-class RegisterForm(Form):
+class RegisterForm(FlaskForm):
     email = StringField("Email", validators=[DataRequired(), Email(), email_exists])
     password = PasswordField(
         "Password",
@@ -27,11 +27,11 @@ class RegisterForm(Form):
     )
     password2 = PasswordField("Confirm Password", validators=[DataRequired()])
 
-class LoginForm(Form):
+class LoginForm(FlaskForm):
     email = StringField("Email", validators=[DataRequired()])
     password = PasswordField("Password", validators=[DataRequired()])
 
-class ProfileForm(Form):
+class ProfileForm(FlaskForm):
     name = StringField("Name", validators=[DataRequired()])
     address = IntegerField("Zipcode",validators=[DataRequired()])
     phone = IntegerField("Phone")
@@ -51,10 +51,10 @@ class ProfileForm(Form):
     sports = StringField("Sport", validators=[DataRequired()])
     religion = SelectField("Religion", validators=[DataRequired()],choices = RELIGONS)
 
-class SearchForm(Form):
+class SearchForm(FlaskForm):
     search_query = StringField("Search",validators=[DataRequired()],render_kw={"placeholder": "Search.."} )
 
-class AdvancedSearchForm(Form):
+class AdvancedSearchForm(FlaskForm):
     state = SelectField("State",choices = STATE_IN_CHOICES,validators=[DataRequired()])
     school_type = SelectField("School Type",validators=[DataRequired()],choices = SCHOOL_TYPE_CHOICES)
     highest_degree = SelectField("Highest Degree", validators=[DataRequired()],choices = DEGREES)

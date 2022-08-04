@@ -103,6 +103,8 @@ def home():
     info_ids_params = "website,shortDescription,campusImage,city,stateAbbr,aliases,acceptance_rate,enrolled_students,avg_cost_of_attendance,average_financial_aid,logo_image"
     results = requests.get('https://api.collegeai.com/v1/api/college-list?api_key='+college_api_key + '&filters=' + requests.utils.quote(params)+'&info_ids='+info_ids_params)
     data = results.json()
+    print("Hello world")
+    print(user_zipcode)
     data = helper.filterCollegeData(data)
     
     #Search function
