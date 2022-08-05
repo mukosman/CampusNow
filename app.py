@@ -1,3 +1,4 @@
+from inspect import Attribute
 from flask import Flask, render_template, request,g,url_for,flash,redirect
 import requests, stripe
 import forms
@@ -16,6 +17,8 @@ from choices import getData
 import favicon
 from pandas import read_excel 
 import os
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 from PIL import Image
@@ -132,12 +135,31 @@ def logout():
 def makegraphoptions():
     return render_template("graphoptions.html")
 
+@app.route("/displaygraph",methods=["POST"])
+def displaygraph():
+    print(request.form)
+    for x in request.form:
+        category=(x)
+    name=(request.form.get((x)))
+    print("category is a "+category+" and attribute is a "+name)
+    colleges=[]
+    colleges.append("002115")
+    colleges.append("001315")
+    colleges.append("002128")
+    colleges=getinfo(colleges)
+    data=getgraphdata(colleges,category,name)
+    #print(category)
+    #print(attribute)
+    #print(data)
+    #print(data)
+    color=getgraphcolors(colleges)
+    if (savegraph(data[0],data[1],color)==0):
+        return "<img src=\"/static/my_plot.png\"/>"
+    else:
+        return "<h1>This failed fam. </h1>"
 
 
-def getfavorites(userid):
-    pass
-def addfavorite(userid,collegeid):
-    pass
+
 
 @app.route("/graphshow", methods=["GET"])
 def showgraph():
@@ -213,21 +235,43 @@ def getinfo(colleges):
     return collegeinfo
 
 
-def getgraphdata(colleges,category,attribute):
+def getgraphdata(colleges,category,name):
     '''
     Gets graph x axis labels and height data from list of college 
     json objects and chosen category and attribute
     '''
     x=[]
     height=[]
+    name=name.split(".")
     for college in colleges:
         college=college["latest"]
         try:
-            ht=int(college[category][attribute])
-            height.append(ht)
+            collegename=college["school"]["name"]
+            college=college[category]
+            for part in name:
+                college=college[part]
+            x.append(collegename)
+            if college!=None:
+                height.append(college)
+            else:
+                height.append(0)
+            '''
+            try:
+                ht=ht["average"]
+                ht=ht["overall"]
+            except:
+                pass
+            try:
+                ht=ht["overall"]
+            except:
+                pass
+            height.append(float(ht))
             x.append(college["school"]["name"])
+            '''
         except:
+            print("hell nah")
             pass
+
     return(x,height)
 
 def getgraphcolors(colleges):
