@@ -187,16 +187,20 @@ def makegraphoptions():
     return render_template("graphoptions.html")
 
 @app.route("/displaygraph",methods=["POST"])
+@login_required
 def displaygraph():
     print(request.form)
     for x in request.form:
         category=(x)
     name=(request.form.get((x)))
     print("category is a "+category+" and attribute is a "+name)
-    colleges=[]
-    colleges.append("002115")
-    colleges.append("001315")
-    colleges.append("002128")
+    try:
+        colleges=getfavorites()
+    except:
+        colleges=[]
+        colleges.append("002115")
+        colleges.append("001315")
+        colleges.append("002128")
     colleges=getinfo(colleges)
     data=getgraphdata(colleges,category,name)
     #print(category)
