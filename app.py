@@ -112,8 +112,6 @@ def home():
     info_ids_params = "website,shortDescription,campusImage,city,stateAbbr,aliases,acceptance_rate,enrolled_students,avg_cost_of_attendance,average_financial_aid,logo_image"
     results = requests.get('https://api.collegeai.com/v1/api/college-list?api_key='+college_api_key + '&filters=' + requests.utils.quote(params)+'&info_ids='+info_ids_params)
     data = results.json()
-    print("Hello world")
-    print(user_zipcode)
     data = helper.filterCollegeData(data)
     
     #Search function and cookies
@@ -128,7 +126,11 @@ def home():
 
     return render_template("home.html",form = form,data = data)
 
-@app.route("/search_results")
+@app.errorhandler(404)
+def not_found(error):
+    return render_template('404.html'),404
+
+@app.route("/search_results", methods=("GET", "POST"))
 @login_required
 def search_results():
     search_query = session['results']
@@ -141,7 +143,27 @@ def search_results():
     rankings_query = get_college_info(search_query,rankings_ids_available)
     similar_query = get_college_info(search_query,similar_ids_available)
 
-    return render_template("search_results.html",basic_query=basic_query,admission_query=admission_query,pricing_query=pricing_query,campus_query=campus_query,outcomes_query=outcomes_query,sports_query=sports_query,rankings_query =rankings_query ,similar_query=similar_query)
+    form = forms.FavoriteForm()
+    if form.validate_on_submit():
+        check = form.favorite_check
+        if check:
+            models.favorites.create(
+                user=g.user._get_current_object(), college_id=basic_query['name']
+            )
+
+    return render_template("search_results.html",form = form, basic_query=basic_query,admission_query=admission_query,pricing_query=pricing_query,campus_query=campus_query,outcomes_query=outcomes_query,sports_query=sports_query,rankings_query =rankings_query ,similar_query=similar_query)
+
+"""@app.route("/favorites",)
+def favorites():
+    stream = current_user.get_favs().limit(100)
+    if favs.count() == 0:
+         abort(404)
+    else:
+        for i in stream:
+            basic_query = get_college_info(,basic_ids_available)
+    return render_template('favorites.html', stream=stream)"""
+
+
 
 @app.route("/registration",methods=("GET", "POST"))
 def registration():
@@ -166,7 +188,6 @@ def login():
 
         if check_password_hash(user.password, form.password.data):
             login_user(user)
-            flash("You are logged in", "success")
             return redirect(url_for("profile"))
         else:
             flash("Password does not match", "error")
@@ -177,7 +198,6 @@ def login():
 @login_required
 def logout():
     logout_user()
-    flash("You've been logged out! Come back soon!", "success")
     return redirect(url_for("index"))
 
 
@@ -194,15 +214,11 @@ def advanced_search():
         #diversity = form.diversity.data 
         acceptance_rate = form.acceptance_rate.data
         #annual_cost = form.annual_cost.data
-        close_to_score = form.close_to_score.data
         #distance_from_home = form.distance_from_home.data
 
         types = f'"{school_type}"'
         size = f'"{campus_size}"'
-        if close_to_score == True:
-            score = 'true'
-        else:
-            score = 'false'
+    
         zipcode = str(current_user.address)
         sat_score = str(int(current_user.sat_math)+int(current_user.sat_reading_writing))
         acceptance_type= f'"{acceptance_rate}"' 
@@ -210,7 +226,7 @@ def advanced_search():
 
 
         info_ids_params = "website,shortDescription,campusImage,city,stateAbbr,aliases,acceptance_rate,enrolled_students,avg_cost_of_attendance,average_financial_aid,logo_image"
-        params = '{"funding-type":[' + types + '],"schoolSize":['+ size +'],"satOverall":'+ sat_score +',"closeToMyScores":'+score+',"selectivity":['+ acceptance_type +'],"in-state":"'+state+'","degree-length":['+ degree_type +']}'
+        params = '{"funding-type":[' + types + '],"schoolSize":['+ size +'],"satOverall":'+ sat_score +',"selectivity":['+ acceptance_type +'],"in-state":"'+state+'","degree-length":['+ degree_type +']}'
         results = requests.get('https://api.collegeai.com/v1/api/college-list?api_key='+college_api_key + '&filters=' + requests.utils.quote(params)+'&info_ids='+info_ids_params)
         session['results'] = json.dumps(results.json())
         return redirect(url_for("advanced_search_results"))
@@ -224,6 +240,7 @@ def advanced_search_results():
     retrieve = session['results']
     data = json.loads(retrieve)
     data = helper.filterCollegeData(data)
+    #print(data['Logo Image'])
 
     return render_template("advanced_search_results.html", data=data)
 

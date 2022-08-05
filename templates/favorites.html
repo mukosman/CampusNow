@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+{%block content %}
+<section class="features section text-center">
+<div class="container">
+    <div class="features-inner section-inner has-top-divider">
+        <h2 class="section-title mt-0" style="color:#1E4D92"><b>Your Favorites<b></h2>
+        <div class="features-wrap">
+            {%for school in stream%}
+                <div class="feature is-revealing">
+                    <div class="feature-inner">
+                        <div class="feature-icon">
+                            <img src = "{{school['Logo Image']}}" width="48" height="48" ></img>
+                        </div>
+                        <h4 class="feature-title h3-mobile">{{ school['Name'] }}</h4>
+                        <p class="text-sm">{{ school["City"] }}, {{school["State"]}}</p>
+                    </div>
+                </div>
+            {%endfor%}
+        </div>
+    </div>
+    </div>
+</section>
+{% endblock %}

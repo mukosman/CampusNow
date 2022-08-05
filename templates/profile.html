@@ -3,12 +3,13 @@
 <section class="hero text-center has-top-divider">
 	<div class="container-sm">
 		<div class="hero-inner">
-			<div class="container-sm text-light" >
+			<div class="container-sm" >
 				<h2 class="section-title mt-0">Create your profile</h2>
-				<p class="hero-cta is-revealing">It's simpler to connect you with schools the more information you provide.</p>
+				<p class="hero-cta is-revealing text-light">It's simpler to connect you with schools the more information you provide.</p>
+                <p class = "hero-cta is-revealing text-light">If nothing changed, please <a href ="{{ url_for('home') }}">skip</a> </p>
 			</div>
 			<form method="POST">
-					<div class = "text-light">
+					<div class>
 						{{ form.hidden_tag() }}
                         <ul class="m-0" style="list-style: none;">
                             <h4> Personal Information</h4>
@@ -101,9 +102,9 @@
                             <li>
                                 {{form.religion}}
                             </li> 
+                            <p> </p>
+                            <button class="button button-sm button-shadow" type="submit">Save Changes</a>
                         </ul>
-						<p> </p>
-						<button class="button button-sm button-shadow" type="submit">Save Changes</a>
 				    </div>
 			</form>
 		</div>

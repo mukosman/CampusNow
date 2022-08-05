@@ -54,6 +54,10 @@ class ProfileForm(FlaskForm):
 class SearchForm(FlaskForm):
     search_query = StringField("Search",validators=[DataRequired()],render_kw={"placeholder": "Search.."} )
 
+class FavoriteForm(FlaskForm):
+    favorite_check= BooleanField("Favorite")
+
+
 class AdvancedSearchForm(FlaskForm):
     state = SelectField("State",choices = STATE_IN_CHOICES,validators=[DataRequired()])
     school_type = SelectField("School Type",validators=[DataRequired()],choices = SCHOOL_TYPE_CHOICES)
@@ -65,7 +69,7 @@ class AdvancedSearchForm(FlaskForm):
     #diversity = SelectField("Diversity Preference", validators = [DataRequired()])
     acceptance_rate = SelectField('Acceptance Rate',validators=[DataRequired()],choices= ACCEPTANCE_IN_CHOICES)
     #annual_cost = SelectField('Annual Cost', validators = [DataRequired()])
-    close_to_score = BooleanField('Close to my score')
+
 
     
 

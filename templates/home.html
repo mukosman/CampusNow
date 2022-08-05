@@ -2,39 +2,39 @@
 {%block content %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <section class="features section text-center">
-                <div class="container">
-                    <div class="features-inner section-inner has-top-divider">
-                        <h2 class="section-title mt-0" style="color:#fff"><b>School Recommendations<b></h2>
-                        <div class="features-wrap">
-                            {%for school in data%}
-                                {% if loop.index0 < 4 %}
-                            <div class="feature is-revealing">
-                                <div class="feature-inner">
-                                    <div class="feature-icon">
-                                        <img src = "{{school['Logo Image']}}" width="48" height="48" ></img>
-                                    </div>
-                                    <h4 class="feature-title h3-mobile">{{ school['Name'] }}</h4>
-                                    <p class="text-sm">{{ school["City"] }}, {{school["State"]}}</p>
-                                    <p class="text-sm"><a href = #>Learn More</a><p>
-                                </div>
-                            </div>
-                                {% endif %}
-                            {%endfor%}
+    <div class="container">
+        <div class="features-inner section-inner has-top-divider">
+            <h2 class="section-title mt-0" style="color:#1E4D92"><b>School Recommendations<b></h2>
+            <div class="features-wrap">
+                {% for school in data %}
+                    {% if loop.index0 < 4 %}
+                <div class="feature is-revealing">
+                    <div class="feature-inner">
+                        <div class="feature-icon">
+                            <img src = "{{school['Logo Image']}}" width="48" height="48" ></img>
                         </div>
+                        <h4 class="feature-title h3-mobile">{{ school['Name'] }}</h4>
+                        <p class="text-sm">{{ school["City"] }}, {{school["State"]}}</p>
+                        <p class="text-sm"><a href = #>Learn More</a><p>
                     </div>
                 </div>
-            </section>
-            <section class="features section text-center">
-                <div class="container-sm">
-                    <div class="pricing-inner section-inner has-top-divider">
-                        <h1 class="section-title mt-0 text-center">Search Tool</h1>
-                        <p class ="text-sm">Looking for our advanced search tool, click <a href = "{{ url_for('advanced_search') }}">here</a></p>
-                        <form method="POST">
-                        {{ form.hidden_tag() }}
-                            {{form.search_query}}
-                        <button class = "button-shadow" type="submit"><i class="fa fa-search"></i></button>
-                        </form>
-                    </div>
-                </div>
-            </section>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+<section class="features section text-center">
+    <div class="container-sm">
+        <div class="pricing-inner section-inner has-top-divider">
+            <h1 class="section-title mt-0 text-center">Search Tool</h1>
+            <p class ="text-sm">Looking for our advanced search tool, click <a href = "{{ url_for('advanced_search') }}">here</a></p>
+            <form method="POST">
+            {{ form.hidden_tag() }}
+                {{form.search_query}}
+            <button class = "button-shadow" type="submit"><i class="fa fa-search"></i></button>
+            </form>
+        </div>
+    </div>
+</section>
 {%endblock%}

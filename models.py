@@ -45,9 +45,8 @@ class user(UserMixin, Model):
     sports = CharField()
     religion = CharField()
 
-    def get_search(self):
-        return searchResults.select().where(searchResults.user == self)
-
+    def get_favs(self):
+        return favorites.select().where(favorites.user == self)
 
     class Meta:
         database = DATABASE
@@ -90,9 +89,20 @@ class user(UserMixin, Model):
                 print(r)
         except IntegrityError:
             raise ValueError("Error submitting")
-    
+
+
+class favorites(Model):
+    timestamp = DateTimeField(default=datetime.datetime.now)
+    user = ForeignKeyField(model=user, related_name='favorites')
+
+    college_id = CharField()
+
+    class Meta:
+        database = DATABASE
+        order_by = ('-timestamp',)
+
 
 def initialize():
     DATABASE.connect()
-    DATABASE.create_tables([user,], safe=True)
+    DATABASE.create_tables([user,favorites], safe=True)
     DATABASE.close()

@@ -1,20 +1,26 @@
  {% extends "layout.html" %}
  {%block content %}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@2.1.0/build/pure-min.css" integrity="sha384-yHIFVG6ClnONEA5yB5DJXfW2/KC173DIQrYoZMEtBvGzmf0PKiGyNEqe9N6BNDBH" crossorigin="anonymous">
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
  <section class="hero has-top-divider">
     <div class="container-sm">
         <div class="features-extended-inner section-inner ">
             <div class="features-extended-header">
             {%if basic_query.items()|length > 0 %}
-                <div class="container-sm text-light text-center">
+                <div class="container-sm text-center">
                     <h2 class="section-title mt-0">Search Result</h2>
-                    <p class="section-paragraph">Best matching result to your query</p>
+                    <p class="section-paragraph text-light">Best matching result to your query</p>
                     <img src ="{{ basic_query['campusImage'] }}" alt = "Campus Image" class="center" style="width:70%"></img>
                 </div>
                     <div class = "text-sm">
                         <h3 class = "section-title mt-0 text-center">{{ basic_query['name'] }}</h3>
                         <h4 class = "section-title mt-0 text-center">{{ basic_query['city'] }}, {{ basic_query['stateAbbr'] }}</h4>
                         <p class = "text-center"><a href = "{{ basic_query['website']}}">{{ basic_query['website']}}</a></p>
+                        <form method="POST">
+                            {{ form.hidden_tag() }}
+                                {{form.favorite_check}}
+                            <button class = "button-shadow" type="submit"><i class="fa fa-heart"></i>Add to favorites</button>
+                        </form>
                         <table class="pure-table pure-table-horizontal">
                             <thead>
                             <tr>
