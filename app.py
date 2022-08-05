@@ -131,6 +131,50 @@ def login():
     return render_template("login.html", form=form)
 
 
+@app.route("/addfavorite")
+@login_required
+def addfavorite():
+    collegeid=request.form.get("collegeid")
+    userid=models.user.id
+    models.favorites.addfavorite(userid,collegeid)
+    getcolors(collegeid)
+    return 0
+
+def getfavorites():
+    userid=models.user.id
+    faves=models.favorites.getfavorites(userid)
+    return faves
+
+def getcolors(collegeid):
+    color=models.collegecolors.getcolor(collegeid)
+    if(color==None):
+        college=college["latest"]
+        try:
+            imgurl=college["school"]["school_url"]
+            if(imgurl[0:4]!="http"):
+                imgurl="https://"+imgurl
+            print(imgurl)
+            color=getfaviconcolor(imgurl)
+            if(color[0:3]!=[255,255,255]):
+                color1=[]
+                for x in range(len(color)):
+                    color1.append(color[x]/255.0)
+                color=color1
+            else:
+                color=[0.0, 0.0, 0.0]
+        except:
+            color=[0.0, 0.0, 0.0]
+        color1=color[0]
+        color2=color[1]
+        color3=color[2]
+        models.collegecolors.addcolor(collegeid,color1,color2,color3)
+    return color 
+
+
+
+
+
+
 @app.route("/logout")
 @login_required
 def logout():
@@ -284,23 +328,7 @@ def getgraphdata(colleges,category,name):
 def getgraphcolors(colleges):
     colors=[]
     for college in colleges:
-        college=college["latest"]
-        try:
-            imgurl=college["school"]["school_url"]
-            if(imgurl[0:4]!="http"):
-                imgurl="https://"+imgurl
-            print(imgurl)
-            color=getfaviconcolor(imgurl)
-            if(color[0:3]!=[255,255,255]):
-                color1=[]
-                for x in range(len(color)):
-                    color1.append(color[x]/255.0)
-                colors.append(color1)
-            else:
-                colors.append([0.0, 0.0, 0.0])
-        except:
-            colors.append([0.0, 0.0, 0.0])
-    print(colors)
+        getcolors(college)       
     return colors
 
 

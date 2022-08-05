@@ -8,6 +8,48 @@ from wtforms import StringField
 
 DATABASE = MySQLDatabase('campus_now', user='root', password='root',host='127.0.0.1', port=3306)
 
+
+
+
+class favorites(Model):
+    userid=int()
+    collegeid=CharField()
+    
+    @classmethod
+    def addfavorite(cls,userid,collegeid):
+        with DATABASE.transaction():
+            cls.create(
+                userid=userid,
+                collegeid=collegeid
+            )
+    
+    @classmethod
+    def getfavorites(cls,userid):
+        cls.select(cls.collegeid).where(cls.userid==userid)
+    
+
+
+class collegecolors(Model):
+    collegeid=CharField()
+    color1=FloatField()
+    color2=FloatField()
+    color3=FloatField()
+    
+    @classmethod
+    def addcolor(cls,collegeid,color1,color2,color3):
+        with DATABASE.transaction():
+            cls.create(
+                collegeid=collegeid,
+                color1=color1,
+                color2=color2,
+                color3=color3
+            )
+    
+    @classmethod
+    def getcolor(cls,collegeid):
+        cls.select(cls.color1,cls.color2,cls.color3).where(cls.collegeid==collegeid)
+
+
 class user(UserMixin, Model):
     #registration
     email = CharField(unique=True)
@@ -88,9 +130,12 @@ class user(UserMixin, Model):
         except IntegrityError:
             raise ValueError("Error submitting")
 
+#models.favorites.select("colors")
+#limit to get 1  
+
     
 
 def initialize():
     DATABASE.connect()
-    DATABASE.create_tables([user,], safe=True)
+    DATABASE.create_tables([user,favorites,schoolcolors], safe=True)
     DATABASE.close()
