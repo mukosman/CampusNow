@@ -130,50 +130,9 @@ def logout():
 
 @app.route("/graphoptions", methods=["GET"])
 def makegraphoptions():
-    df = read_excel("CollegeScorecardDataDictionary.xlsx",
-                    sheet_name="Institution_Data_Dictionary", usecols="N")
-    options = '''<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for options"> <ul id="myUL">'''
-    #categorieslist=[school, student, cost, aid, earnings,completion,repayment,admissions,academics, programs]
-    '''
-    Add option to sort by category, add popular searches
-    '''
-    for x in range(3250):
-        x = df.iloc[x][0]
-        try:
-            x = x.split(",")
-            category = x[1].split(".")
-            name = category[1]
-            category = category[0]
-            if x[4] != "0":
-                varname = (x[1])
-                options += "<li><a href=\"bargraph?category={0}&name={1}&colleges=selected\">{0} {2}</a></li>".format(
-                    category, name, x[0])
-        except:     
-            pass
+    return render_template("graphoptions.html")
 
-        
-    options += '''</ul> <script>
-function myFunction() {
-  // Declare variables
-  var input, filter, ul, li, a, i, txtValue;
-  input = document.getElementById('myInput');
-  filter = input.value.toUpperCase();
-  ul = document.getElementById("myUL");
-  li = ul.getElementsByTagName('li');
 
-  // Loop through all list items, and hide those who don't match the search query
-  for (i = 0; i < li.length; i++) {
-    a = li[i].getElementsByTagName("a")[0];
-    txtValue = a.textContent || a.innerText;
-    if (txtValue.toUpperCase().indexOf(filter) > -1) {
-      li[i].style.display = "";
-    } else {
-      li[i].style.display = "none";     
-    }
-  }
-}
-</script>'''
-    return options
 
 def getfavorites(userid):
     pass
