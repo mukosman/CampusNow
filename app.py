@@ -1,4 +1,5 @@
 from inspect import Attribute
+import re
 from flask import Flask, render_template, request,g,url_for,flash,redirect
 import requests, stripe
 import forms
@@ -57,6 +58,12 @@ def after_request(response):
 @app.route("/",)
 def index():
     return render_template("index.html")
+
+
+@app.route("/graphimage.html")
+def show():
+    return render_template("graphimage.html")
+
 
 @app.route("/profile",methods=("GET", "POST"))
 @login_required
@@ -154,7 +161,7 @@ def displaygraph():
     #print(data)
     color=getgraphcolors(colleges)
     if (savegraph(data[0],data[1],color)==0):
-        return "<img src=\"/static/my_plot.png\"/>"
+        return render_template("graphimage.html")
     else:
         return "<h1>This failed fam. </h1>"
 
@@ -171,7 +178,7 @@ def showgraph():
     data=getgraphdata(colleges,"student","size")
     color=getgraphcolors(colleges)
     if (savegraph(data[0],data[1],color)==0):
-        return "<img src=\"/static/my_plot.png\"/>"
+        return '''<img src={{ url_for('tmp', filename = 'my_plot.png') }}"/>'''
     else:
         return "<h1>This failed fam. </h1>"
 
@@ -302,6 +309,7 @@ def savegraph(x, height,color):
     plt.xticks(rotation=90)
     plt.tight_layout()
     plt.savefig("static/my_plot.png")
+    plt.close()
     return 0
 
 
