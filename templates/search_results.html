@@ -1,31 +1,143 @@
  {% extends "layout.html" %}
  {%block content %}
- <script src="https://api.collegeai.com/v1/api/bundle.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@2.1.0/build/pure-min.css" integrity="sha384-yHIFVG6ClnONEA5yB5DJXfW2/KC173DIQrYoZMEtBvGzmf0PKiGyNEqe9N6BNDBH" crossorigin="anonymous">
  <section class="hero has-top-divider">
     <div class="container-sm">
         <div class="features-extended-inner section-inner ">
             <div class="features-extended-header">
-            {%if query.items()|length > 0 %}
+            {%if basic_query.items()|length > 0 %}
                 <div class="container-sm text-light text-center">
                     <h2 class="section-title mt-0">Search Result</h2>
                     <p class="section-paragraph">Best matching result to your query</p>
-                    <img src ="{{ query['campusImage'] }}" alt = "Campus Image" class="center" style="width:70%"></img>
+                    <img src ="{{ basic_query['campusImage'] }}" alt = "Campus Image" class="center" style="width:70%"></img>
                 </div>
                     <div class = "text-sm">
-                        <h3 class = "section-title mt-0 text-center">{{ query['name'] }}</h3>
-                        <table>
+                        <h3 class = "section-title mt-0 text-center">{{ basic_query['name'] }}</h3>
+                        <h4 class = "section-title mt-0 text-center">{{ basic_query['city'] }}, {{ basic_query['stateAbbr'] }}</h4>
+                        <p class = "text-center"><a href = "{{ basic_query['website']}}">{{ basic_query['website']}}</a></p>
+                        <table class="pure-table pure-table-horizontal">
+                            <thead>
+                            <tr>
+                                <th>Admissions Data</th>
+                                <th> </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                {% for key, value in admission_query.items() %}
+                                {% if loop.index0 > 2 %}
+                                    <tr>
+                                        <td> {{ key }} </td>
+                                        <td> {{ value }} </td>
+                                    </tr>
+                                    {%endif%}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <table class="pure-table pure-table-horizontal">
                         <thead>
                         <tr>
-                            <th>Key</th>
-                            <th>Value</th>
+                            <th>Cost and Aid</th>
+                            <th> </th>
                         </tr>
                         </thead>
                         <tbody>
-                            {% for key, value in query.items() %}
+                            {% for key, value in pricing_query.items() %}
+                                {% if loop.index0 > 2 %}
                                 <tr>
                                     <td> {{ key }} </td>
                                     <td> {{ value }} </td>
                                 </tr>
+                                {%endif%}
+                            {% endfor %}
+                        </tbody>
+                        </table>
+                        <table class="pure-table pure-table-horizontal">
+                        <thead>
+                        <tr>
+                            <th>Campus</th>
+                            <th>Value</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            {% for key, value in campus_query.items() %}
+                                {% if loop.index0 > 2 %}
+                                <tr>
+                                    <td> {{ key }} </td>
+                                    <td> {{ value }} </td>
+                                </tr>
+                                {%endif%}
+                            {% endfor %}
+                        </tbody>
+                        </table>
+                        <table class="pure-table pure-table-horizontal">
+                        <thead>
+                        <tr>
+                            <th>Outcomes</th>
+                            <th> </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            {% for key, value in outcomes_query.items() %}
+                                 {% if loop.index0 > 2 %}
+                                <tr>
+                                    <td> {{ key }} </td>
+                                    <td> {{ value }} </td>
+                                </tr>
+                                {%endif%}
+                            {% endfor %}
+                        </tbody>
+                        </table>
+                        <table class="pure-table pure-table-horizontal">
+                        <thead>
+                        <tr>
+                            <th>Sports and Frats</th>
+                            <th> </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            {% for key, value in sports_query.items() %}
+                                {% if loop.index0 > 2 %}
+                                <tr>
+                                    <td> {{ key }} </td>
+                                    <td> {{ value }} </td>
+                                </tr>
+                                {% endif%}
+                            {% endfor %}
+                        </tbody>
+                        </table>
+                        <table class="pure-table pure-table-horizontal">
+                        <thead>
+                        <tr>
+                            <th>Rankings</th>
+                            <th> </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            {% for key, value in rankings_query.items() %}
+                                {% if loop.index0 > 2 %}
+                                <tr>
+                                    <td> {{ key }} </td>
+                                    <td> {{ value }} </td>
+                                </tr>
+                                {% endif%}
+                            {% endfor %}
+                        </tbody>
+                        </table>
+                        <table class="pure-table pure-table-horizontal">
+                        <thead>
+                        <tr>
+                            <th>Recommendations</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            {% for key, value in similar_query.items() %}
+                                {% if loop.index0 > 2 %}
+                                <tr>
+                                    <td> {{ key }} </td>
+                                    <td> {{ value }} </td>
+                                </tr>
+                                {% endif%}
                             {% endfor %}
                         </tbody>
                         </table>

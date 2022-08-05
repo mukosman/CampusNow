@@ -28,8 +28,4 @@ def filterCollegeData(d):
                     "Campus Image": school["campusImage"]
                 }
             )
-    
-
-
     return schools
-
